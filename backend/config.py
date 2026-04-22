@@ -23,7 +23,7 @@ class Settings(BaseSettings):
 	vite_ws_url: str = "ws://localhost:8000"
 
 	class Config:
-		env_file = ".env"
+		env_file = [".env", "../.env"]
 		env_file_encoding = "utf-8"
 		# allow VITE_ prefixed vars
 		extra = "ignore"
