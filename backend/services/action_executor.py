@@ -15,21 +15,15 @@ log = structlog.get_logger(__name__)
 
 class ActionExecutor:
 	def __init__(self, plan: dict, parameters: dict, storage_state: Optional[dict] = None):
-		"""
-		:param plan: The JSON action plan containing a list of steps.
-		:param parameters: User-provided values to override defaults.
-		:param storage_state: Playwright storage state (cookies/localStorage).
-		"""
 		self.steps = plan.get("steps", [])
 		self.storage_state = storage_state
 
-		# Merge defaults from plan parameters with provided parameters
 		plan_params = plan.get("parameters", [])
 		self.params = {p.get("name"): p.get("default") for p in plan_params if "name" in p}
 		self.params.update(parameters)
 
-		self.results = {}  # label -> extracted data
-		self.logs = []     # step execution records
+		self.results = {}
+		self.logs = []   
 		self.browser = None
 		self.context = None
 		self.page = None
@@ -78,9 +72,9 @@ class ActionExecutor:
 						error_msg = result.get("detail", "Step failed")
 						break
 
-					# Handle repeat flag (pagination)
+				
 					if result.get("repeat") and "repeat_to" in step:
-						# repeat_to should be an index or a label, but let's assume index for now
+					
 						try:
 							step_index = int(step["repeat_to"])
 							log.info("executor.loop.repeat", target=step_index)
@@ -96,7 +90,7 @@ class ActionExecutor:
 				error_msg = str(e)
 			finally:
 				if self.context:
-					# Capture updated state before closing
+				
 					try:
 						self.storage_state = await self.context.storage_state()
 					except:
@@ -130,7 +124,7 @@ class ActionExecutor:
 
 			elif action == "wait":
 				if not selector:
-					# Fallback: if no selector, wait for network idle (useful for blind waits)
+				
 					await self.page.wait_for_load_state("networkidle", timeout=timeout)
 					return {"status": "success", "detail": "Waited for network idle"}
 				await self.page.wait_for_selector(selector, timeout=timeout)
@@ -155,17 +149,16 @@ class ActionExecutor:
 			elif action == "type":
 				if not selector:
 					return {"status": "failed", "detail": "Missing selector for type"}
-				
-				# Smart fallback: if targeting a <select> element, use select_option instead of fill
+			
 				try:
 					tag_name = await self.page.eval_on_selector(selector, "el => el.tagName.toLowerCase()", timeout=2000)
 					if tag_name == "select":
 						await self.page.select_option(selector, label=str(value))
 						return {"status": "success", "detail": f"Auto-selected {value} in <select>"}
 				except:
-					# If element not found yet, let the subsequent fill() handle the timeout/error
-					pass
 				
+					pass
+
 				await self.page.fill(selector, str(value))
 				return {"status": "success", "detail": f"Typed into {selector}"}
 
@@ -198,20 +191,20 @@ class ActionExecutor:
 						val = await el.inner_text()
 					extracted_values.append(val.strip() if val else "")
 
-				# Merge into results (supporting concatenation for pagination)
+			
 				if label not in self.results:
 					self.results[label] = []
 
 				if isinstance(self.results[label], list):
 					self.results[label].extend(extracted_values)
 				else:
-					# Fallback if label was used for something else
+				
 					self.results[label] = extracted_values
 
 				return {"status": "success", "detail": f"Extracted {len(extracted_values)} items for {label}", "data": extracted_values}
- 
+
 			elif action == "extract_list":
-				# If label is missing, default to "results"
+			
 				label = label or "results"
 				if not selector:
 					return {"status": "failed", "detail": "Missing selector for extract_list"}
@@ -223,7 +216,7 @@ class ActionExecutor:
 				for parent in parents:
 					item = {}
 					for field_name, config in fields.items():
-						# config can be a string (css) or an object {selector, attribute}
+					
 						sub_sel = config if isinstance(config, str) else config.get("selector")
 						sub_attr = None if isinstance(config, str) else config.get("attribute")
 

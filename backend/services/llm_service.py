@@ -22,9 +22,6 @@ ALLOWED_ACTIONS = [
 	"extract", "extract_list", "screenshot", "click_if"
 ]
 
-# =========================
-# SYSTEM PROMPT
-# =========================
 SYSTEM_PROMPT = textwrap.dedent("""
 You are an expert automation engineer. Your task is to convert a user browsing session into a structured Action Plan JSON.
 
@@ -73,9 +70,6 @@ JSON SCHEMA:
 """).format(actions=", ".join(ALLOWED_ACTIONS)).strip()
 
 
-# =========================
-# USER PROMPT
-# =========================
 def _build_user_prompt(session: Any, summary: dict, events: list) -> str:
 	compact_events = json.dumps(events, separators=(",", ":"))
 
@@ -94,9 +88,6 @@ Return structured JSON only.
 """).strip()
 
 
-# =========================
-# LLM CALL
-# =========================
 async def _call_llm(messages: list[dict]) -> dict[str, Any]:
 	from groq import AsyncGroq
 
@@ -115,9 +106,6 @@ async def _call_llm(messages: list[dict]) -> dict[str, Any]:
 	return json.loads(raw)
 
 
-# =========================
-# MAIN
-# =========================
 async def generate_action_plan(session: Any) -> dict[str, Any]:
 	"""
 	Main entry point — converts session events into a validated Action Plan.
@@ -128,7 +116,7 @@ async def generate_action_plan(session: Any) -> dict[str, Any]:
 
 	log.info("llm.generate.start", session_id=session.id)
 
-	# Call LLM
+
 	parsed = await _call_llm([
 		{"role": "system", "content": SYSTEM_PROMPT},
 		{"role": "user", "content": _build_user_prompt(session, summary, events_for_prompt)},
@@ -140,11 +128,11 @@ async def generate_action_plan(session: Any) -> dict[str, Any]:
 	if not isinstance(parsed, dict):
 		raise ValueError(f"Expected JSON object from LLM, got {type(parsed).__name__}")
 
-	# VALIDATE
+
 	if "steps" not in parsed or not isinstance(parsed["steps"], list) or len(parsed["steps"]) == 0:
 		raise ValueError("LLM returned an empty or missing action plan.")
 
-	# Filter invalid actions
+
 	valid_steps = []
 	for step in parsed["steps"]:
 		action = step.get("action")
@@ -164,6 +152,6 @@ async def generate_action_plan(session: Any) -> dict[str, Any]:
 		"parameters": parsed.get("parameters", []),
 		"action_plan": {
 			"steps": parsed.get("steps", []),
-			"parameters": parsed.get("parameters", [])  # Redundant but helpful for executor
+			"parameters": parsed.get("parameters", [])
 		}
 	}

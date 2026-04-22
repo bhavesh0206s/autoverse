@@ -1,13 +1,3 @@
-"""
-Workflows router — Phase 6
-
-GET	   /api/workflows				List with optional search
-POST   /api/workflows				Manual workflow creation
-GET	   /api/workflows/{id}			Single workflow + last 5 run logs
-PATCH  /api/workflows/{id}			Update editable fields
-DELETE /api/workflows/{id}			Soft delete (is_active=false)
-"""
-
 from __future__ import annotations
 
 from typing import Any, Optional
@@ -26,7 +16,7 @@ from schemas.workflows import WorkflowCreate, WorkflowUpdate, WorkflowResponse
 log = structlog.get_logger(__name__)
 router = APIRouter(prefix="/api/workflows", tags=["workflows"])
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+
 
 
 def _wf_out(wf: Workflow, runs: list[RunLog] | None = None) -> dict:
@@ -71,7 +61,7 @@ async def _get_or_404(workflow_id: str, db: AsyncSession) -> Workflow:
 	return wf
 
 
-# ── Endpoints ─────────────────────────────────────────────────────────────────
+
 
 
 @router.get("")
@@ -140,7 +130,6 @@ async def update_workflow(
 @router.delete("/{workflow_id}")
 async def delete_workflow(
 	workflow_id: str, db: AsyncSession = Depends(get_db)) -> dict:
-	"""Soft delete — sets is_active=False."""
 	wf = await _get_or_404(workflow_id, db)
 	wf.is_active = False
 	await db.flush()

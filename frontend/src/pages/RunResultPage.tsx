@@ -43,7 +43,7 @@ function normalizeResultData(data: any): any {
 
   const entries = Object.entries(data);
 
-  // New Rule: If it's a single key pointing to an array of objects, just return that array
+
   if (entries.length === 1) {
     const value = entries[0][1];
     if (Array.isArray(value) && value.length > 0 && typeof value[0] === "object") {
@@ -51,7 +51,7 @@ function normalizeResultData(data: any): any {
     }
   }
 
-  // Check if all values are arrays of the same length > 0
+
   const firstVal = entries[0][1];
   if (!Array.isArray(firstVal) || firstVal.length === 0) return data;
 
@@ -161,7 +161,7 @@ export default function RunResultPage() {
 
   return (
     <div className="space-y-12">
-      {/* Header Context */}
+
       <div className="flex items-center justify-between">
         <nav className="flex items-center gap-6 text-[11px] font-bold text-stone-gray uppercase tracking-editorial">
           <Link to="/" className="hover:text-parchment transition-colors">
@@ -186,7 +186,7 @@ export default function RunResultPage() {
         </button>
       </div>
 
-      {/* Main Analysis Display */}
+
       <div className="space-y-10">
         <h1 className="text-[80px] font-sans font-normal text-parchment leading-[1.0] tracking-[-2.4px]">
           Run Analysis.
@@ -235,7 +235,7 @@ export default function RunResultPage() {
       <div className="h-px bg-mist" />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Left: Metadata & Steps */}
+
         <div className="lg:col-span-1 space-y-12">
           {stepResults.length > 0 && (
             <div className="space-y-8">
@@ -284,7 +284,7 @@ export default function RunResultPage() {
           )}
         </div>
 
-        {/* Right: Data Display */}
+
         <div className="lg:col-span-2 space-y-12">
           {resultData && (
             <div className="space-y-8">
@@ -311,7 +311,7 @@ export default function RunResultPage() {
             </div>
           )}
 
-          {/* Raw output collapsible */}
+
           {rawOutput && (
             <div className="bg-earth-gray/10 border border-mist rounded-comfortable overflow-hidden transition-all duration-500">
               <button

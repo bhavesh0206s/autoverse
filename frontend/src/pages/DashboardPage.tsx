@@ -7,7 +7,6 @@ import { api } from "@/api/client";
 import type { Workflow } from "@/types";
 import clsx from "clsx";
 
-// ── Skeleton ──────────────────────────────────────────────────────────────────
 function Skeleton() {
   return (
     <div className="bg-earth-gray/20 border border-mist rounded-comfortable p-8 animate-pulse space-y-4">
@@ -18,7 +17,6 @@ function Skeleton() {
   );
 }
 
-// ── Workflow Card ─────────────────────────────────────────────────────────────
 function WorkflowCard({ wf }: { wf: Workflow }) {
   const lastRun = wf.recent_runs?.[0];
   const statusColor = lastRun
@@ -62,7 +60,6 @@ function WorkflowCard({ wf }: { wf: Workflow }) {
   );
 }
 
-// ── Dashboard ─────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
   const { data: workflows = [], isLoading } = useQuery<Workflow[]>({
     queryKey: ["workflows"],
@@ -80,7 +77,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-12">
-      {/* Hero Header */}
       <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8">
         <div className="max-w-3xl">
           <span className="text-[12px] font-bold text-stone-gray uppercase tracking-editorial block mb-2">
@@ -108,7 +104,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats Monochromatic */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-1px bg-mist border-y border-mist">
         {stats.map(({ label, value }) => (
           <div key={label} className="bg-void py-8 px-2 first:pl-0 last:pr-0">
@@ -122,7 +117,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Workflows section */}
       <div className="space-y-8">
         <div className="flex items-center justify-between border-b border-mist pb-4">
           <h2 className="text-[32px] font-sans font-normal text-parchment tracking-tight">

@@ -10,7 +10,6 @@ import clsx from "clsx";
 
 type Tab = "plan" | "history";
 
-// ── Skeleton ──────────────────────────────────────────────────────────────────
 function Skeleton() {
   return (
     <div className="animate-pulse space-y-12 p-10 max-w-[1560px] mx-auto">
@@ -100,7 +99,6 @@ export default function WorkflowDetailPage() {
 
   return (
     <div className="space-y-12">
-      {/* Back Header */}
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate("/")}
@@ -126,9 +124,7 @@ export default function WorkflowDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
-        {/* Left col: Configuration (3/5) */}
         <div className="lg:col-span-3 space-y-12">
-          {/* Main Context */}
           <div className="space-y-8">
             <h1 className="text-[56px] font-sans font-normal text-parchment leading-tight tracking-[-1.12px]">
               {workflow.name}
@@ -142,9 +138,7 @@ export default function WorkflowDetailPage() {
 
           <div className="h-px bg-mist" />
 
-          {/* Configuration Form */}
           <div className="space-y-12">
-            {/* Steps Visualization */}
             {steps.length > 0 && (
               <div className="space-y-8">
                 <h3 className="text-[12px] font-bold text-stone-gray uppercase tracking-editorial">
@@ -175,7 +169,6 @@ export default function WorkflowDetailPage() {
               </div>
             )}
 
-            {/* Parameters Inputs */}
             {parameters.length > 0 && (
               <div className="space-y-8">
                 <h3 className="text-[12px] font-bold text-stone-gray uppercase tracking-editorial">
@@ -214,9 +207,7 @@ export default function WorkflowDetailPage() {
           </div>
         </div>
 
-        {/* Right col: Analysis/History (2/5) */}
         <div className="lg:col-span-2 space-y-8 sticky top-32">
-          {/* Navigation Tabs */}
           <div className="flex border-b border-mist">
             {(["plan", "history"] as Tab[]).map((t) => (
               <button
@@ -235,7 +226,6 @@ export default function WorkflowDetailPage() {
             ))}
           </div>
 
-          {/* Tab Content */}
           <div className="min-h-[500px]">
             {tab === "plan" ? (
               <div className="bg-earth-gray/20 border border-mist rounded-comfortable overflow-hidden">

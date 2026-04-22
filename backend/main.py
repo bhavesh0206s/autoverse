@@ -1,12 +1,3 @@
-"""
-Autoverse — FastAPI application entry point	(Phase 8 finalised)
-
-Routers : sessions, workflows, runner, learn
-WebSocket: /ws/sessions/{session_id}
-Health	 : GET /health
-Lifespan : create_all_tables on startup
-"""
-
 from __future__ import annotations
 
 import time
@@ -28,7 +19,7 @@ from websocket_manager import manager
 settings = get_settings()
 log = structlog.get_logger(__name__)
 
-# ── Lifespan ──────────────────────────────────────────────────────────────────
+
 
 
 @asynccontextmanager
@@ -38,7 +29,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 	log.info("shutdown")
 
 
-# ── App ───────────────────────────────────────────────────────────────────────
+
 
 app = FastAPI(
 	title="Autoverse API",
@@ -49,7 +40,7 @@ app = FastAPI(
 	redoc_url="/redoc",
 )
 
-# ── CORS ──────────────────────────────────────────────────────────────────────
+
 
 app.add_middleware(
 	CORSMiddleware,
@@ -59,7 +50,7 @@ app.add_middleware(
 	allow_headers=["*"],
 )
 
-# ── Request logging middleware ────────────────────────────────────────────────
+
 
 
 @app.middleware("http")
@@ -77,7 +68,7 @@ async def log_requests(request: Request, call_next):  # type: ignore[return]
 	return response
 
 
-# ── Global exception handler ──────────────────────────────────────────────────
+
 
 
 @app.exception_handler(Exception)
@@ -94,14 +85,14 @@ async def global_error_handler(request: Request,
 	)
 
 
-# ── Routers ───────────────────────────────────────────────────────────────────
+
 
 app.include_router(sessions_router)
 app.include_router(workflows_router)
 app.include_router(runner_router)
 app.include_router(learn_router)
 
-# ── WebSocket ─────────────────────────────────────────────────────────────────
+
 
 
 @app.websocket("/ws/sessions/{session_id}")
@@ -112,7 +103,7 @@ async def websocket_endpoint(
 	await ws_handler(session_id, websocket)
 
 
-# ── Health ────────────────────────────────────────────────────────────────────
+
 
 
 @app.get("/health")

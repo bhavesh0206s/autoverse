@@ -14,9 +14,6 @@
 
   document.documentElement.setAttribute("data-autoverse-extension", "true");
 
-  // =========================
-  // SELECTOR GENERATION
-  // =========================
   function getUniqueSelector(el: HTMLElement) {
     if (!el || el === document.body || el === document.documentElement) return null;
 
@@ -40,7 +37,7 @@
       return `input[type="${(el as HTMLInputElement).type}"]`;
     }
 
-    // fallback path (limited depth)
+   
     const parts = [];
     let node: HTMLElement | null = el;
     let depth = 0;
@@ -69,7 +66,7 @@
       if (v) attrs[name] = v;
     }
 
-    // filter noisy class
+   
     const cls = el.getAttribute("class");
     if (cls && cls.length < 40) {
       attrs["class"] = cls;
@@ -82,16 +79,13 @@
     return el.textContent?.trim().slice(0, 100) || null;
   }
 
-  // =========================
-  // EMIT SYSTEM
-  // =========================
   function emit(event: any) {
     if (!isRecording) {
       console.log("Event ignored: isRecording=false", event.type);
       return;
     }
 
-    // Ignore events from the Autoverse dashboard itself
+   
     if (window.location.host === "localhost:3000" || window.location.host === "localhost:5173") {
       console.log("Event ignored: Dashboard URL filtered", event.type);
       return;
@@ -119,16 +113,12 @@
 
     chrome.runtime
       .sendMessage({
-        type: "CAPTURE_EVENTS",
         sessionId,
         events: batch,
       })
       .catch(() => {});
   }
 
-  // =========================
-  // EVENTS
-  // =========================
 
   function onClick(e: MouseEvent) {
     const t = e.target as HTMLElement;
@@ -174,7 +164,7 @@
 		}, 300);
   }
 
-  // ENTER KEY (critical for search automation)
+ 
   function onKeyDown(e: KeyboardEvent) {
     const t = e.target as HTMLElement;
 
@@ -187,7 +177,7 @@
     }
   }
 
-  // FORM SUBMIT
+ 
   function onSubmit(e: Event) {
     const t = e.target as HTMLElement;
 
@@ -197,7 +187,7 @@
     });
   }
 
-  // HOVER
+ 
   let hoverTimer: number | null = null;
   let lastHoveredSelector: string | null = null;
 
@@ -231,7 +221,7 @@
     }, 500);
   }
 
-  // SCROLL
+ 
   let scrollThrottle: number | null = null;
 
   function onScroll() {
@@ -255,7 +245,7 @@
     }, 100);
   }
 
-  // NAVIGATION
+ 
   function emitNavigation(fromUrl: string | null, toUrl: string | null, method: string) {
     emit({
       type: "navigation",
@@ -266,9 +256,8 @@
     });
   }
 
-  // =========================
-  // HOOKS
-  // =========================
+ 
+ 
 
   const _pushState = history.pushState.bind(history);
 
@@ -288,9 +277,8 @@
     emit({ type: "page_loaded" });
   });
 
-  // =========================
-  // ATTACH / DETACH
-  // =========================
+ 
+ 
 
   function attach() {
     document.addEventListener("click", onClick, { capture: true });
@@ -298,7 +286,7 @@
     document.addEventListener("keydown", onKeyDown, { capture: true });
     document.addEventListener("submit", onSubmit, { capture: true });
     document.addEventListener("scroll", onScroll, { passive: true });
-    // document.addEventListener("mouseover", onMouseOver, { capture: true });
+   
 
     emitNavigation(null, window.location.href, "load");
   }
@@ -309,7 +297,7 @@
     document.removeEventListener("keydown", onKeyDown, { capture: true });
     document.removeEventListener("submit", onSubmit, { capture: true });
     document.removeEventListener("scroll", onScroll);
-    // document.removeEventListener("mouseover", onMouseOver, { capture: true });
+   
 
     if (batchTimer) clearTimeout(batchTimer);
     if (inputDebounce) clearTimeout(inputDebounce);
@@ -317,9 +305,8 @@
     flushBuffer();
   }
 
-  // =========================
-  // EXTENSION MESSAGING
-  // =========================
+ 
+ 
 
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg.type === "START_RECORDING") {
@@ -333,9 +320,8 @@
     }
   });
 
-  // =========================
-  // PAGE ↔ EXTENSION BRIDGE
-  // =========================
+ 
+ 
 
   window.addEventListener("message", async (event) => {
     if (event.source !== window || !event.data?.type?.startsWith("AUTOVERSE_")) return;
@@ -353,9 +339,8 @@
     }
   });
 
-  // =========================
-  // RESTORE SESSION
-  // =========================
+ 
+ 
 
   chrome.storage.session
     .get(["isRecording", "currentSessionId"])
