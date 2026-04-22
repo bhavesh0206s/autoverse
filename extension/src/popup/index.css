@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  width: 320px;
+  min-height: 280px;
+  @apply bg-void text-parchment font-sans text-sm selection:bg-parchment/10 selection:text-parchment;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-void;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-earth-gray rounded-pill;
+}

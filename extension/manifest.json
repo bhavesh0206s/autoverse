@@ -1,0 +1,44 @@
+{
+	"manifest_version": 3,
+	"name": "Autoverse Recorder",
+	"version": "1.0.0",
+	"description": "Record browser actions and stream them to Autoverse for AI automation generation.",
+	"permissions": [
+		"activeTab",
+		"scripting",
+		"storage",
+		"tabs"
+	],
+	"host_permissions": [
+		"<all_urls>"
+	],
+	"background": {
+		"service_worker": "src/background/index.ts",
+		"type": "module"
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"<all_urls>"
+			],
+			"js": [
+				"src/content/index.ts"
+			],
+			"run_at": "document_idle",
+			"all_frames": false
+		}
+	],
+	"action": {
+		"default_popup": "index.html",
+		"default_icon": {
+			"16": "icons/autoverse.png",
+			"48": "icons/autoverse.png",
+			"128": "icons/autoverse.png"
+		}
+	},
+	"icons": {
+		"16": "icons/autoverse.png",
+		"48": "icons/autoverse.png",
+		"128": "icons/autoverse.png"
+	}
+}

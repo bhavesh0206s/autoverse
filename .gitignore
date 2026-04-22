@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Workflows / Frontend
+node_modules/
+dist/
+.cache/
+*.local
+
+# Environment — never commit secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+*~
+
+# IDE
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+
+# Docker
+*.log
+
+# Playwright
+playwright-report/
+test-results/
+/backend/sessions/
